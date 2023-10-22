@@ -4,11 +4,9 @@ provider "aws" {
   region = "us-east-1"
 }
 
-
 variable "pgp_key" {
   description = "The PGP key used to encrypt the IAM user password"
 }
-
 
 // AWS EC2 instance resource
 resource "aws_instance" "deep-racer-ec2" {
@@ -34,22 +32,21 @@ resource "aws_instance" "deep-racer-ec2" {
 resource "aws_iam_role" "s3_access_role" {
   name = "S3AccessRole"
   assume_role_policy = <<EOF
+{
+"Version": "2012-10-17",
+"Statement": [
     {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-        "Action": "sts:AssumeRole",
-        "Principal": {
-            "Service": "ec2.amazonaws.com"
-        },
-        "Effect": "Allow",
-        "Sid": ""
-        }
-    ]
+    "Action": "sts:AssumeRole",
+    "Principal": {
+        "Service": "ec2.amazonaws.com"
+    },
+    "Effect": "Allow",
+    "Sid": ""
     }
-    EOF
+]
 }
-
+EOF
+}
 
 
 resource "aws_iam_instance_profile" "s3_access_profile" {
@@ -67,8 +64,6 @@ resource "aws_subnet" "deep_racer_subnet" {
   cidr_block              = "10.0.1.0/24"  // A subnet within the VPC's CIDR block
   availability_zone       = "us-east-1a"  // Adjust to match your desired AZ within us-east-1
 }
-
-
 
 
 resource "aws_iam_role_policy_attachment" "s3_access_policy_attachment" {
@@ -100,21 +95,21 @@ EOF
 resource "aws_iam_policy" "s3_access_policy" {
   name        = "S3AccessPolicy"
   description = "Policy to allow access to specified S3 bucket"
-  policy      = <<EOF
+  policy = <<EOF
+{
+"Version": "2012-10-17",
+"Statement": [
     {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-        "Action": [
-            "s3:GetObject",
-            "s3:PutObject"
-        ],
-        "Effect": "Allow",
-        "Resource": "arn:aws:s3:::aws-deep-racer/*"
-        }
-    ]
+    "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+    ],
+    "Effect": "Allow",
+    "Resource": "arn:aws:s3:::aws-deep-racer/*"
     }
-    EOF
+]
+}
+EOF
 }
 
 resource "aws_iam_user" "andrew" {

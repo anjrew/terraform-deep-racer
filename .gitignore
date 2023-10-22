@@ -1,1 +1,22 @@
+# Compiled files
+*.tfstate
+*.tfstate.*
+
+# Module directory
+.terraform/
+
+# Ignore override files as they are usually used for local overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Include override files you do wish to add to version control using negated ! operator
+#!example_override.tf
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Ignore sensitive data
 secrets.tfvars
