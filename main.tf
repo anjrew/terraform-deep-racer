@@ -9,9 +9,9 @@ variable "pgp_key" {
 }
 
 // AWS EC2 instance resource
-resource "aws_instance" "deep-racer-ec2" {
+resource "aws_instance" "deep_racer_ec2" {
   // Amazon Machine Image (AMI) ID
-  ami  = "ami-0ff834984748eaef2"
+  ami  = var.ami_id
   
   // Type of instance to launch
   instance_type = "g4dn.2xlarge"
@@ -19,13 +19,13 @@ resource "aws_instance" "deep-racer-ec2" {
   // Tags to assign to the instance
   tags = {
     // Name tag for the instance
-    Name = "deep-racer-machine"
+    Name = "deep_racer_machine"
   }
 
   // IAM instance profile to associate with the EC2 instance
   iam_instance_profile = aws_iam_instance_profile.s3_access_profile.name
 
-  subnet_id               = aws_subnet.deep_racer_subnet.id  // Associate with the created subnet
+  subnet_id = aws_subnet.deep_racer_subnet.id  // Associate with the created subnet
 
 }
 
@@ -125,5 +125,19 @@ resource "aws_iam_access_key" "andrew_access_key" {
   user = aws_iam_user.andrew.name
 }
 
+resource "aws_budgets_budget" "deep_racer_budget" {
+  name_prefix  = "warning-"
+  budget_type  = "COST"
+  limit_amount = "20"
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+}
 
 
+resource "aws_budgets_budget" "another_budget" {
+  name_prefix            = "severe-warning-"
+  budget_type            = "COST"
+  limit_amount           = "40"
+  limit_unit             = "USD"
+  time_unit    = "MONTHLY"
+}
